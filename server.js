@@ -148,6 +148,27 @@ io.on('connection', (socket) => {
     }
   });
 
+  // WebRTC Signaling - Join room
+  socket.on('join-room', (roomId) => {
+    socket.join(roomId);
+    socket.to(roomId).emit('user-joined', socket.id);
+  });
+
+  // WebRTC Signaling - Offer
+  socket.on('offer', (data) => {
+    socket.to(data.room).emit('offer', data);
+  });
+
+  // WebRTC Signaling - Answer
+  socket.on('answer', (data) => {
+    socket.to(data.room).emit('answer', data);
+  });
+
+  // WebRTC Signaling - ICE Candidate
+  socket.on('ice-candidate', (data) => {
+    socket.to(data.room).emit('ice-candidate', data);
+  });
+
   // Error handling
   socket.on('error', (error) => {
     console.error('Socket error:', error);
